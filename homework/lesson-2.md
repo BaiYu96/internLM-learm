@@ -12,7 +12,7 @@ pip install -U huggingface_hub
 
 我们使用` huggingface-cli download -h`命令查看`huggingface-cli`的下载命令参数
 
-![1704894333690](../assets/1704894333690.png)
+![1704894333690](assets/1704894333690.png)
 
 通过命令行下载`internlm-chat-20b`的`config.json`文件
 
@@ -22,11 +22,11 @@ huggingface-cli download --resume-download --local-dir /root/temp internlm/inter
 
 在开发机上毫不意外的报错了，因为huggingface被墙了。
 
-![1704898913929](../assets/1704898913929.png)
+![1704898913929](assets/1704898913929.png)
 
 在我本地电脑试了就可以下载
 
-![1704899169190](../assets/1704899169190.png)
+![1704899169190](assets/1704899169190.png)
 
 ## 用InternLM-7B生成小故事
 
@@ -112,7 +112,7 @@ python cli_demo.py
 
 ```
 
-![1704892813889](../assets/1704892813889.png)
+![1704892813889](assets/1704892813889.png)
 
 其实生成的内容，我们不难发现，是有逻辑上的问题的，因为白玉不是一只猫，这可能是模型上还有一些参数需要调整。
 
