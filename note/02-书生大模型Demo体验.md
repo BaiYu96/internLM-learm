@@ -470,3 +470,89 @@ streamlit run /root/code/lagent/examples/baiyu_lagent_demo.py --server.address 1
 此时 `InternLM-Chat-7B` 模型理解题意生成解此题的 `Python` 代码，`Lagent` 调度送入 `Python` 代码解释器求出该问题的解。
 
 它知道是两个问题，不过它错以为两个问题都是数学题，虽然回答上已经告诉了我它是谁，但是语言逻辑上还是有问题。
+
+## 浦语灵笔体验
+
+浦语灵笔由于涉及到更多的算力处理，所以重新在InternStudio上创建一个新的开发机 A100(1/4) * 2 机器。
+
+这里图文创作用到的模型是`internlm-xcomposer-7b`，我们需要在开发机内新建一个虚拟环境。
+
+具体步骤，在终端输入 `bash` 命令，进入 `conda` 环境。进入 `conda` 环境之后，使用以下命令从本地克隆一个已有的`pytorch 2.0.1` 的环境
+
+> /root/share/install_conda_env_internlm_base.sh xcomposer-demo
+
+![1705031175927](assets/1705031175927.png)
+
+看到红框的命令说明环境创建完成
+
+激活虚拟环境`xcomposer-demo`，就是我们上一句命令创建的虚拟环境
+
+> conda activate xcomposer-demo
+
+### 相关依赖
+
+因为是新机器，新的conda环境，所以要初始化依赖
+
+```bash
+# 升级pip
+python -m pip install --upgrade pip
+
+pip install transformers==4.33.1 timm==0.4.12 sentencepiece==0.1.99 gradio==3.44.4 markdown2==2.4.10 xlsxwriter==3.1.2 einops accelerate
+```
+
+
+
+### 模型准备
+
+[InternStudio](https://studio.intern-ai.org.cn/)平台的 `share` 目录下已经为我们准备了全系列的 `InternLM` 模型，所以我们可以直接复制`internlm-xcomposer-7b`模型即可。使用如下命令复制：
+
+```shell
+mkdir -p /root/model/Shanghai_AI_Laboratory # 这一句可以不用执行，因为前面我们已经创建过了
+cp -r /root/share/temp/model_repos/internlm-xcomposer-7b /root/model/Shanghai_AI_Laboratory
+```
+> -r 选项表示递归地复制目录及其内容
+
+![1705031253616](assets/1705031253616.png)
+
+### 代码准备
+
+在 `/root/code` `git clone InternLM-XComposer` 仓库的代码
+
+```shell
+cd /root/code
+git clone https://gitee.com/internlm/InternLM-XComposer.git
+cd /root/code/InternLM-XComposer
+git checkout 3e8c79051a1356b9c388a6447867355c0634932d  # 最好保证和教程的 commit 版本一致
+```
+
+### Demo 运行
+
+在终端运行以下代码：
+
+```shell
+cd /root/code/InternLM-XComposer
+python examples/web_demo.py  \
+    --folder /root/model/Shanghai_AI_Laboratory/internlm-xcomposer-7b \
+    --num_gpus 1 \
+    --port 6006
+```
+
+> 这里 `num_gpus 1` 是因为InternStudio平台对于 `A100(1/4)*2` 识别仍为一张显卡。但如果有小伙伴课后使用两张 3090 来运行此 demo，仍需将 `num_gpus` 设置为 `2` 。
+
+### SSH链接
+
+> ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 34915
+
+访问本地链接，我让它以《如何成为一名prompt工程师》为标题写文章
+
+![1705038663207](assets/1705038663207.png)
+
+下图是运行时命令行的显示
+
+![1705038659106](assets/1705038659106.png)
+
+下图是效果
+
+![1705038884868](assets/1705038884868.png)
+
+点击save article，把文件保存，我也把生成的文件放在这里供大家阅读~
