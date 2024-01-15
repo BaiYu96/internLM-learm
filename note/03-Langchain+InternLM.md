@@ -162,7 +162,7 @@ def get_text(dir_path):
 
 得到该列表之后，我们就可以将它引入到 LangChain 框架中构建向量数据库。由纯文本对象构建向量数据库，我们需要先对文本进行分块，接着对文本块进行向量化。
 
-LangChain 提供了多种文本分块工具，此处我们使用字符串递归分割器，并选择分块大小为 500，块重叠长度为 150（由于篇幅限制，此处没有展示切割效果，学习者可以自行尝试一下，想要深入学习 LangChain 文本分块可以参考教程 [《LangChain - Chat With Your Data》](https://github.com/datawhalechina/prompt-engineering-for-developers/blob/9dbcb48416eb8af9ff9447388838521dc0f9acb0/content/LangChain%20Chat%20with%20Your%20Data/1.%E7%AE%80%E4%BB%8B%20Introduction.md)：
+LangChain 提供了多种文本分块工具，此处我们使用字符串递归分割器，并选择分块大小为 500，块重叠长度为 150
 
 ```python
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -336,7 +336,7 @@ class InternLM_LLM(LLM):
 
 在上述类定义中，我们分别重写了构造函数和 `_call` 函数：对于构造函数，我们在对象实例化的一开始加载本地部署的 InternLM 模型，从而避免每一次调用都需要重新加载模型带来的时间过长；`_call` 函数是 LLM 类的核心函数，LangChain 会调用该函数来调用 LLM，在该函数中，我们调用已实例化模型的 chat 方法，从而实现对模型的调用并返回调用结果。
 
-在整体项目中，我们将上述代码封装为 LLM.py，后续将直接从该文件中引入自定义的 LLM 类。
+在整体项目中，我们将上述代码封装为`LLM.py`，后续将直接从该文件中引入自定义的 LLM 类。
 
 ## 构建检索问答链
 
@@ -374,7 +374,7 @@ vectordb = Chroma(
 
 ```python
 from LLM import InternLM_LLM
-llm = InternLM_LLM(model_path = "/root/data/model/Shanghai_AI_Laboratory/internlm-chat-7b")
+llm = InternLM_LLM(model_path = "/root/model/Shanghai_AI_Laboratory/internlm-chat-7b")
 llm.predict("你是谁")
 ```
 
@@ -443,7 +443,7 @@ def load_chain():
     embeddings = HuggingFaceEmbeddings(model_name="/root/data/model/sentence-transformer")
 
     # 向量数据库持久化路径
-    persist_directory = 'root/temp/data_base/vector_db/chroma'
+    persist_directory = '/root/temp/data_base/vector_db/chroma'
 
     # 加载数据库
     vectordb = Chroma(
@@ -452,7 +452,7 @@ def load_chain():
     )
 
     # 加载自定义 LLM
-    llm = InternLM_LLM(model_path = "/root/data/model/Shanghai_AI_Laboratory/internlm-chat-7b")
+    llm = InternLM_LLM(model_path = "/root/model/Shanghai_AI_Laboratory/internlm-chat-7b")
 
     # 定义一个 Prompt Template
     template = """使用以下上下文来回答最后的问题。如果你不知道答案，就说你不知道，不要试图编造答
@@ -540,3 +540,13 @@ gr.close_all()
 # 直接启动
 demo.launch()
 ```
+
+通过将上述代码封装为`run_gradio.py`脚本，直接通过 python 命令运行，即可在本地启动知识库助手的 Web Demo，默认会在 7860 端口运行
+
+> python /root/temp/run_gradio.py
+
+![1705155788918](assets/1705155788918.png)
+
+接下来将服务器端口映射到本地端口即可访问
+
+> ssh -CNg -L 7860:127.0.0.1:7860 root@ssh.intern-ai.org.cn -p 34497
