@@ -1,3 +1,28 @@
+## Finetune简介
+
+LLM的下游应用中。增量预训练和指令跟随是经常会用到的两种微调模式
+
+增量预训练微调
+
+* 使用场景：让基座模型学习到一些新知识，如某个垂类领域的常识
+* 训练数据：文章、书籍、代码等
+
+指令跟随微调
+
+* 使用场景：让模型学会对话模板，根据人类指令进行对话
+* 训练数据：高质量的对话、问答数据
+
+![1705850392509](assets/1705850392509.png)
+
+## Xtuner简介
+
+一个大语言模型微调工具箱。*由* *MMRazor* *和* *MMDeploy* *联合开发。*
+
+### Xtuner特点
+
+- **傻瓜化：** 以 配置文件 的形式封装了大部分微调场景，**0基础的非专业人员也能一键开始微调**。
+- **轻量级：** 对于 7B 参数量的LLM，**微调所需的最小显存仅为 8GB** ： **消费级显卡✅，colab✅**
+
 ## 环境准备
 
 ### 创建conda环境
@@ -23,8 +48,6 @@ conda create --name xtuner0.1.9 python=3.10 -y
 mkdir -p ~/xtuner019 && cd ~/xtuner019
 # 拉取 0.1.9 的版本源码
 git clone -b v0.1.9 https://gitee.com/Internlm/xtuner
-
-
 ```
 
 ## 安装XTuner
@@ -175,4 +198,69 @@ git lfs clone https://modelscope.cn/Shanghai_AI_Laboratory/internlm-chat-7b.git 
 这个时候训练的时间就变成两个半小时了，那就静候佳音吧
 
 ![1705820875574](assets/1705820875574.png)
+
+经过漫长的等待，终于跑完了
+
+![1705843318166](assets/1705843318166.png)
+
+训练完，在我们的配置文件目录下，出现一个`work_dirs`目录，具体内容如下图所示：
+
+![1705844852990](assets/1705844852990.png)
+
+### 转换HF模型
+
+将得到的 PTH 模型转换为 HuggingFace 模型，**即：生成 Adapter 文件夹**
+
+> xtuner convert pth_to_hf ${CONFIG_NAME_OR_PATH} ${PTH_file_dir} ${SAVE_PATH}
+
+* CONFIG_NAME_OR_PATH=~/ft-oasst1/internlm_chat_7b_qlora_oasst1_e3_copy.py
+* PTH_file_dir=~/ft-oasst1/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth
+* SAVE_PATH=~/ft-oasst1/hf
+
+```
+# 新建模型存放的文件夹
+mkdir ~/ft-oasst1/hf
+# 添加环境变量
+export MKL_SERVICE_FORCE_INTEL=1
+# 模型转换
+xtuner convert pth_to_hf ~/ft-oasst1/internlm_chat_7b_qlora_oasst1_e3_copy.py ~/ft-oasst1/work_dirs/internlm_chat_7b_qlora_oasst1_e3_copy/epoch_3.pth ~/ft-oasst1/hf
+```
+
+![1705846213132](assets/1705846213132.png)
+
+```
+# 进入hf文件夹
+cd ~/ft-oasst1/hf 
+# 查看文件夹下文件
+ll
+```
+
+![1705846432487](assets/1705846432487.png)
+
+**此时，hf 文件夹即为我们平时所理解的所谓 “LoRA 模型文件”**
+
+> 可以简单理解：LoRA 模型文件 = Adapter
+
+## 部署与测试
+
+### 合并HF adapter 到LLM
+
+```
+mkdir ~/ft-oasst1/merged
+xtuner convert merge ~/ft-oasst1/internlm-chat-7b  ~/ft-oasst1/hf  ~/ft-oasst1/merged --max-shard-size 2GB
+```
+
+![1705849389281](assets/1705849389281.png)
+
+与合并后的模型对话
+
+```
+# 加载 Adapter 模型对话（Float 16）
+xtuner chat ~/ft-oasst1/merged --prompt-template internlm_chat
+
+# 4 bit 量化加载
+# xtuner chat ~/ft-oasst1/merged --bits 4 --prompt-template internlm_chat
+```
+
+![1705851694282](assets/1705851694282.png)
 
