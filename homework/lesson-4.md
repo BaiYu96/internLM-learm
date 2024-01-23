@@ -219,7 +219,9 @@ vi ft_baiyu_web_demo.py
 ![Alt text](./assets/code.png)
 
 ```
-
+# 进入到代码所在路径
+cd /root/code/InternLM
+# 因为demo代码里面的图片是用的相对路径，所以必须在代码所在文件夹来运行脚本。否则图片会找不到相对路径而报错
 streamlit run /root/code/InternLM/ft_baiyu_web_demo.py --server.address 127.0.0.1 --server.port 6006
 
 ```
@@ -229,3 +231,4 @@ streamlit run /root/code/InternLM/ft_baiyu_web_demo.py --server.address 127.0.0.
 > ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 34915
 
 
+![Alt text](./assets/chat_baiyu.png)
