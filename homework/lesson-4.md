@@ -1,5 +1,7 @@
 ## XTuner InternLM-Chat个人小助手
 
+![Alt text](./assets/chat_baiyu.png)
+
 通过微调，帮助模型知道谁是爸爸
 
 方式：通过XTuner进行微调
@@ -229,6 +231,8 @@ streamlit run /root/code/InternLM/ft_baiyu_web_demo.py --server.address 127.0.0.
 打开ssh端口映射
 
 > ssh -CNg -L 6006:127.0.0.1:6006 root@ssh.intern-ai.org.cn -p 34915
+
+进行对话测试
 
 
 ![Alt text](./assets/chat_baiyu.png)
