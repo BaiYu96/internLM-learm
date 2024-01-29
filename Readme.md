@@ -10,7 +10,7 @@
 
 [第三节课笔记](https://github.com/BaiYu96/internLM-learm/blob/main/note/03-Langchain%2BInternLM.md)
 
-[第四节课笔记](https://github.com/BaiYu96/internLM-learm/blob/main/note/04-Xtuner note.md)
+[第四节课笔记](https://github.com/BaiYu96/internLM-learm/blob/main/note/04-Xtuner%20note.md)
 
 [第五节课笔记](https://github.com/BaiYu96/internLM-learm/blob/main/note/05-LMDeploy大模型部署.md)
 
@@ -27,3 +27,4 @@
 [第五节课作业](https://github.com/BaiYu96/internLM-learm/blob/main/homework/lesson-5.md)
 
 [第六节课作业](https://github.com/BaiYu96/internLM-learm/blob/main/homework/lesson-6.md)
+
