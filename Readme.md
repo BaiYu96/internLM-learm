@@ -2,6 +2,10 @@
 
 本仓库是参加书生浦语大模型训练营的笔记和作业存放的位置。书生浦语大模型的[教程](https://github.com/InternLM/tutorial/)
 
+## 项目实战
+
+[职场教练](https://github.com/BaiYu96/career_coach)
+
 ## 笔记合集
 
 [第一节课笔记](https://blog.csdn.net/zhh763984017/article/details/135491600)
